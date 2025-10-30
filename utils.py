@@ -42,14 +42,14 @@ def takeoff(connection):
     print(msg)
 
     # Wait for desired altitude
-    is_takeoff = 1;
+    is_takeoff = 1
 
     while is_takeoff:
         pos_msg = connection.recv_match(type="LOCAL_POSITION_NED", blocking=True)
         print("Altitude: ", -pos_msg.z)
         if pos_msg.z < -9.8:
             print("Reached altitude")
-            is_takeoff = 0;
+            is_takeoff = 0
 
 
 def req_local_pos(connection):
