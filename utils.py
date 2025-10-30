@@ -46,7 +46,7 @@ def takeoff(connection):
 
     while is_takeoff:
         pos_msg = connection.recv_match(type="LOCAL_POSITION_NED", blocking=True)
-        print("Altitude: ", -pos_msg.z)
+        print("Altitude: ", -pos_msg.z) 
         if pos_msg.z < -9.8:
             print("Reached altitude")
             is_takeoff = 0
@@ -54,7 +54,13 @@ def takeoff(connection):
 
 def req_local_pos(connection):
     # TODO: MAV_CMD_SET_MESSAGE_INTERVAL
-    
+    connection.mav.command_long_send(connection.target_system,
+                                     connection.target_component,
+                                     mavutil.mavlink.MAV_CMD_SET_MESSAGE_INTERVAL,
+                                     0,
+                                     mavutil.mavlink.MAVLINK_MSG_ID_LOCAL_POSITION_NED,
+                                     100000,
+                                     0,0,0,0,0)
     
     # Wait for ACK
     msg = connection.recv_match(type="COMMAND_ACK", blocking=True)
@@ -103,7 +109,11 @@ def set_local_pos(connection, x, y, z):
 
 def land(connection):
     #TODO: MAV_CMD_NAV_LAND
-
+    connection.mav.command_long_send(connection.target_system,
+                                     connection.target_component,
+                                     mavutil.mavlink.MAV_CMD_NAV_LAND,
+                                     0,
+                                     0,0,0,0,0,0,0)
     
     # Wait for ACK
     msg = connection.recv_match(type="COMMAND_ACK", blocking=True)
